@@ -1,4 +1,4 @@
-#include "Image.hpp"
+#include "Image.h"
 
 
 Color::Color(){
@@ -25,6 +25,10 @@ void Palette::setColor(uint64_t index, Color color) {
     colors[index] = color;
 }
 
+void Palette::setRGB(uint64_t index, uint8_t r, uint8_t g, uint8_t b){
+    colors[index] = {r, g, b};
+}
+
 
 static uint8_t mix(uint8_t a, uint8_t b, double f) {
     return a + (b - a)*f;
@@ -45,10 +49,32 @@ Color Palette::getColor(double index){
 Image::Image(uint64_t width, uint64_t height){
     this->width = width;
     this->height = height;
-    this->pixels = new Color[width*height];
+    this->pixels = new uint8_t[3*width*height];
 }
 
 
 void Image::setPixel(uint64_t x, uint64_t y, const Color& color){
-    
+    uint64_t idx = 3*(y*width + x);
+    pixels[idx++] = color.r;
+    pixels[idx++] = color.g;
+    pixels[idx]   = color.b;
+}
+
+
+void Image::saveImage(string filename) {
+    // Save pixel data as PPM image
+    ofstream output(filename, ios::out | ios::binary | ios::app);
+    output << "P6\n" << width << ' ' << height << "\n255\n";
+    output.write((char*)pixels, 3*width*height);
+    output.close();
+}
+
+
+uint64_t Image::getWidth() {
+    return width;
+}
+
+
+uint64_t Image::getHeight() {
+    return height;
 }
