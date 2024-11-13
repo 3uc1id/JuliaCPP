@@ -45,7 +45,7 @@ int main(int argc, char **argv){
     Image img(options.pixel_width, options.pixel_height);
     JuliaParams params = {
         .c=options.c,
-        .escape_radius=1000.0,
+        .escape_radius=2.0,
         .iterations=options.iterations,
         .img=img,
         .p=palette,
@@ -55,7 +55,7 @@ int main(int argc, char **argv){
     vector<thread> workers;
 
     for(int i=0; i<options.thread_count; i++){
-        workers.emplace_back(julia_worker, params, options.thread_count, i);
+        workers.emplace_back(julia_worker, &params, options.thread_count, i);
     }
 
     // wait for all workers to finish

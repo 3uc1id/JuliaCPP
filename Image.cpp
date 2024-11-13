@@ -36,7 +36,7 @@ static uint8_t mix(uint8_t a, uint8_t b, double f) {
 
 
 Color Palette::getColor(double index){
-    uint64_t index_a = (uint64_t) index;
+    uint64_t index_a = ((uint64_t) index) % length;
     uint64_t index_b = (index_a + 1) % length;
     double fraction = index - index_a;
     uint8_t r = mix(colors[index_a].r, colors[index_b].r, fraction);
@@ -55,7 +55,7 @@ Image::Image(uint64_t width, uint64_t height){
 
 void Image::setPixel(uint64_t x, uint64_t y, const Color& color){
     uint64_t idx = 3*(y*width + x);
-    pixels[idx++] = color.r;
+    pixels[idx++] = color.r; 
     pixels[idx++] = color.g;
     pixels[idx]   = color.b;
 }

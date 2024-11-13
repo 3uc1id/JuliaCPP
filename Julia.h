@@ -18,6 +18,6 @@ typedef struct JuliaParams_s {
 } JuliaParams;
 
 
-void julia_worker(JuliaParams &params, uint64_t row_step, uint64_t row_start);
+void julia_worker(JuliaParams *params, uint64_t row_step, uint64_t row_start);
 
 #endif

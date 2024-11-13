@@ -11,13 +11,13 @@
 #include <iostream>
 #include <unistd.h>
 
+using namespace std;
+
 #ifndef EXE_NAME
 const string NAME = "JuliaCPP";
 #else
 const string NAME = EXE_NAME;
 #endif
-
-using namespace std;
 
 typedef struct CLIOptions_s {
     uint32_t iterations;
