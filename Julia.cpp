@@ -1,4 +1,9 @@
 #include "Julia.h"
+#include <cmath>
+
+
+using namespace std;
+
 
 void julia_worker(JuliaParams *params, uint64_t row_step, uint64_t row_start){
     /* 
@@ -45,7 +50,7 @@ void julia_worker(JuliaParams *params, uint64_t row_step, uint64_t row_start){
         Thread t_i starts by working on row i, then works on row i+n where n is the
         number of threads running.
     */
-    double i_part = params->top_left.imag() - cell_width/2.0;
+    double i_part = params->top_left.imag() - cell_width/2.0 - row_start*cell_width;
     Color interior; // default is black
     for(uint64_t row=row_start; row < params->img.getHeight(); row+=row_step){
         double real_part = real_start + cell_width/2.0;
@@ -56,17 +61,15 @@ void julia_worker(JuliaParams *params, uint64_t row_step, uint64_t row_start){
                 z = z*z + params->c;
             }
             if(abs(z) >= params->escape_radius){
-                // cout << '.';
-                double smoothed_iteration = i + 1 - log(log(abs(z)))/LOG2;
+                double smoothed_iteration = i + 1 - log2(log(abs(z)));
                 Color c = params->p.getColor(smoothed_iteration);
                 params->img.setPixel(col, row, c);
             }
             else {
-                cout << '+';
                 params->img.setPixel(col, row, interior);
             }
-            real_part += cell_width;
+            real_part += cell_width; // step right towards positive real
         }
-        i_part += cell_width*row_step;
+        i_part -= cell_width*row_step; // step down towards negative imaginary
     }
 }

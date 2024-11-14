@@ -1,5 +1,11 @@
 #include "Option.h"
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <unistd.h>
 
+
+using namespace std;
 
 static void usage() {
     const string usage_string = " [-I iterations] [-W pixel_width] [-H pixel_height] [-C complex_parameter] [-T top_left] [-B bottom_right] [-N threads] [-O filename] [-h]";
@@ -64,7 +70,7 @@ static bool parse_double(const char *str, char name, double &value) {
 
 static bool parse_complex_double(const char *str, char name, complex<double> &value) {
     size_t input_len = strlen(str);
-    char *input = (char *)calloc(input_len, 1);
+    char *input = (char *)calloc(input_len+1, 1);
     memcpy(input, str, input_len);
     char *part = strtok(input, ",");
     double real_part;

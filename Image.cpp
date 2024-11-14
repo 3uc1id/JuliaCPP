@@ -1,5 +1,9 @@
 #include "Image.h"
 
+#include <fstream>
+#include <iostream>
+
+using namespace std;
 
 Color::Color(){
     this->r = 0;
@@ -15,22 +19,27 @@ Color::Color(uint8_t r, uint8_t g, uint8_t b){
 }
 
 
-Palette::Palette(uint64_t length){
+Palette::Palette(size_t length){
     this->length = length;
-    this->colors = new Color[length];
+    this->linear_colors = new double[3*length];
 }
 
 
-void Palette::setColor(uint64_t index, Color color) {
-    colors[index] = color;
+void Palette::setRGB(size_t index, uint8_t r, uint8_t g, uint8_t b){
+    size_t idx = 3*index;
+    linear_colors[idx++] = pow(r/255.0, 2.2);
+    linear_colors[idx++] = pow(g/255.0, 2.2);
+    linear_colors[idx] = pow(b/255.0, 2.2);
 }
 
-void Palette::setRGB(uint64_t index, uint8_t r, uint8_t g, uint8_t b){
-    colors[index] = {r, g, b};
+
+void Palette::setColor(size_t index, Color color) {
+    // Gama correction
+    this->setRGB(index, color.r, color.g, color.b);
 }
 
 
-static uint8_t mix(uint8_t a, uint8_t b, double f) {
+static double mix(double a, double b, double f) {
     return a + (b - a)*f;
 }
 
@@ -39,10 +48,10 @@ Color Palette::getColor(double index){
     uint64_t index_a = ((uint64_t) index) % length;
     uint64_t index_b = (index_a + 1) % length;
     double fraction = index - index_a;
-    uint8_t r = mix(colors[index_a].r, colors[index_b].r, fraction);
-    uint8_t g = mix(colors[index_a].g, colors[index_b].g, fraction);
-    uint8_t b = mix(colors[index_a].b, colors[index_b].b, fraction);
-    return Color(r, g, b);
+    double r = mix(linear_colors[3*index_a], linear_colors[3*index_b], fraction);
+    double g = mix(linear_colors[3*index_a+1], linear_colors[3*index_b+1], fraction);
+    double b = mix(linear_colors[3*index_a+2], linear_colors[3*index_b+2], fraction);
+    return Color(255*pow(r, 1/2.2), 255*pow(g, 1/2.2), 255*pow(b, 1/2.2));
 }
 
 
@@ -63,7 +72,7 @@ void Image::setPixel(uint64_t x, uint64_t y, const Color& color){
 
 void Image::saveImage(string filename) {
     // Save pixel data as PPM image
-    ofstream output(filename, ios::out | ios::binary | ios::app);
+    ofstream output(filename, ios::out | ios::binary);
     output << "P6\n" << width << ' ' << height << "\n255\n";
     output.write((char*)pixels, 3*width*height);
     output.close();

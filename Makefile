@@ -1,10 +1,11 @@
 CXX=g++
-CXXFLAGS=-std=c++11 -Wall -Werror -pedantic -O2
+CXXFLAGS=-std=c++11 -Wall -Werror -pedantic -fsanitize=address -g
 LDLIBS=-lm
+OBJECTS=main.o Option.o Image.o Julia.o
 
 .PHONY: clean
 
-JuliaCPP: main.o Option.o Image.o Julia.o
+JuliaCPP: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
 
 main.o: Option.o Image.o Julia.o
@@ -20,4 +21,4 @@ Option.o: Option.h
 	$(CXX) $(CXXFLAGS) -c Option.cpp
 
 clean:
-	rm *.o JuliaCPP >>/dev/null
+	rm $(OBJECTS) JuliaCPP &>/dev/null; true

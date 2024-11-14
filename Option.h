@@ -1,20 +1,14 @@
 #ifndef OPTION_H
 #define OPTION_H
-#include <cstdint>
-#include <cstdlib>
-#include <cerrno>
-#include <climits>
-#include <cstdio>
-#include <cstring>
-#include <complex>
-#include <string>
-#include <iostream>
-#include <unistd.h>
 
-using namespace std;
+#include <string>
+#include <complex>
+#include <cstdint>
+
+
 
 #ifndef EXE_NAME
-const string NAME = "JuliaCPP";
+const std::string NAME = "JuliaCPP";
 #else
 const string NAME = EXE_NAME;
 #endif
@@ -24,10 +18,10 @@ typedef struct CLIOptions_s {
     uint32_t pixel_width;
     uint32_t pixel_height;
     uint32_t thread_count;
-    complex<double> c;
-    complex<double> top_left;
-    complex<double> bottom_right;
-    string output_filename;
+    std::complex<double> c;
+    std::complex<double> top_left;
+    std::complex<double> bottom_right;
+    std::string output_filename;
 } CLIOptions;
 
 bool parseOptions(int argc, char **argv, CLIOptions &options);

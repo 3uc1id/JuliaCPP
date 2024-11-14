@@ -1,11 +1,9 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 #include <string>
-#include <fstream>
-#include <iostream>
 #include <cstdint>
+#include <cstddef>
 
-using namespace std;
 
 class Color {
     public:
@@ -19,13 +17,13 @@ class Color {
 
 class Palette {
     public:
-        Palette(uint64_t length);
-        void setColor(uint64_t index, Color color);
-        void setRGB(uint64_t index, uint8_t r, uint8_t g, uint8_t b);
+        Palette(size_t length);
+        void setColor(size_t index, Color color);
+        void setRGB(size_t index, uint8_t r, uint8_t g, uint8_t b);
         Color getColor(double index);
     private:
-        uint64_t length;
-        Color *colors;
+        size_t length;
+        double *linear_colors;
 };
 
 
@@ -33,13 +31,12 @@ class Image {
     public:
         Image(uint64_t width, uint64_t height);
         void setPixel(uint64_t x, uint64_t y, const Color& c);
-        void saveImage(string filename);
+        void saveImage(std::string filename);
         uint64_t getWidth();
         uint64_t getHeight();
     private:
         uint64_t width;
         uint64_t height;
         uint8_t *pixels;
-
 };
 #endif
