@@ -20,23 +20,15 @@ Color::Color(uint8_t r, uint8_t g, uint8_t b){
 }
 
 
-Palette::Palette(size_t length){
-    this->length = length;
-    this->linear_colors = new double[3*length];
+void Palette::addRGB(uint8_t r, uint8_t g, uint8_t b){
+    rgb_length++;
+    linear_colors.push_back(pow(r/255.0, 2.2));
+    linear_colors.push_back(pow(g/255.0, 2.2));
+    linear_colors.push_back(pow(b/255.0, 2.2));
 }
 
-
-void Palette::setRGB(size_t index, uint8_t r, uint8_t g, uint8_t b){
-    size_t idx = 3*index;
-    linear_colors[idx++] = pow(r/255.0, 2.2);
-    linear_colors[idx++] = pow(g/255.0, 2.2);
-    linear_colors[idx] = pow(b/255.0, 2.2);
-}
-
-
-void Palette::setColor(size_t index, Color color) {
-    // Gama correction
-    this->setRGB(index, color.r, color.g, color.b);
+void Palette::addColor(Color rgb){
+    addRGB(rgb.r, rgb.g, rgb.b);
 }
 
 
@@ -46,11 +38,11 @@ static double mix(double a, double b, double f) {
 
 
 Color Palette::getColor(double index){
-    uint64_t index_a = ((uint64_t) index) % length;
-    uint64_t index_b = (index_a + 1) % length;
-    assert((0 <= index_a && index_a <= length));
+    uint64_t index_a = ((uint64_t) index) % rgb_length;
+    uint64_t index_b = (index_a + 1) % rgb_length;
+    assert((0 <= index_a && index_a <= rgb_length));
 
-    double fraction = index - index_a;
+    double fraction = index - (uint64_t)index;
     double r = mix(linear_colors[3*index_a], linear_colors[3*index_b], fraction);
     double g = mix(linear_colors[3*index_a+1], linear_colors[3*index_b+1], fraction);
     double b = mix(linear_colors[3*index_a+2], linear_colors[3*index_b+2], fraction);

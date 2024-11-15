@@ -84,9 +84,9 @@ struct OptionParser::Private {
         // Prints a help message generated from the option data supplied.
         cout << self.progName << ' ';
         for(const auto &kv : self.longToShort) {
-            cout << '[' << kv.second << ' ';
+            cout << "[-" << kv.second << ' ';
             for(const auto &c : kv.first) {
-                cout << toupper(c);
+                cout << (char)toupper(c);
             }
             cout << "] ";
         }
@@ -107,7 +107,7 @@ struct OptionParser::Private {
             cout << self.helpMessages[kv.first] << endl;
         }
         if(self.epilog.length()){
-            cout << self.epilog << endl;
+            cout << endl << self.epilog << endl;
         }
     }
 };
@@ -245,8 +245,83 @@ bool OptionParser::parseOptions(int argc, char **argv){
 }
 
 
+static bool lookUp(map<string,char> m, string k, char &out){
+    auto findResult = m.find(k);
+    if(findResult == m.end()){
+        return false;
+    }
+    out = findResult->second;
+    return true;
+}
+
+
 bool OptionParser::getOptionValue(string longName, string &out){
-    auto result = stringOptions
+    char shortName;
+    if(!lookUp(longToShort, longName, shortName)){
+        return false;
+    }
+    auto result = stringOptions.find(shortName);
+    if(result == stringOptions.end()){
+        return false;
+    }
+    out = result->second;
+    return true;
+}
+
+
+bool OptionParser::getOptionValue(string longName, double &out){
+    char shortName;
+    if(!lookUp(longToShort, longName, shortName)){
+        return false;
+    }
+    auto result = doubleOptions.find(shortName);
+    if(result == doubleOptions.end()){
+        return false;
+    }
+    out = result->second;
+    return true;
+}
+
+
+bool OptionParser::getOptionValue(string longName, complex<double> &out){
+    char shortName;
+    if(!lookUp(longToShort, longName, shortName)){
+        return false;
+    }
+    auto result = complexDoubleOptions.find(shortName);
+    if(result == complexDoubleOptions.end()){
+        return false;
+    }
+    out = result->second;
+    return true;
+}
+
+
+bool OptionParser::getOptionValue(string longName, size_t &out){
+    char shortName;
+    if(!lookUp(longToShort, longName, shortName)){
+        return false;
+    }
+    auto result = sizetOptions.find(shortName);
+    if(result == sizetOptions.end()){
+        return false;
+    }
+    out = result->second;
+    return true;
+}
+
+
+bool OptionParser::getOptionValue(string longName, uint32_t &out){
+    char shortName;
+    if(!lookUp(longToShort, longName, shortName)){
+        return false;
+    }
+    auto result = uint32tOptions.find(shortName);
+    if(result == uint32tOptions.end()){
+        return false;
+    }
+    out = result->second;
+    return true;
 }
 
 /* static void usage() {

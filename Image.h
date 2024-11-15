@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdint>
 #include <cstddef>
+#include <vector>
 
 
 class Color {
@@ -17,13 +18,12 @@ class Color {
 
 class Palette {
     public:
-        Palette(size_t length);
-        void setColor(size_t index, Color color);
-        void setRGB(size_t index, uint8_t r, uint8_t g, uint8_t b);
+        void addRGB(uint8_t r, uint8_t g, uint8_t b);
+        void addColor(Color rgb);
         Color getColor(double index);
     private:
-        size_t length;
-        double *linear_colors;
+        size_t rgb_length = 0;
+        std::vector<double> linear_colors;
 };
 
 

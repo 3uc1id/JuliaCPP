@@ -6,6 +6,7 @@
 #include <complex>
 #include <map>
 #include <vector>
+#include <getopt.h>
 
 const size_t MAX_LONGNAME_LENGTH = 20;
 
@@ -48,10 +49,7 @@ class OptionParser {
         std::map<char, uint32_t> uint32tOptions;
 };
 
-bool parseComplexDouble(std::string val, std::complex<double> &out);
-bool parseUint32t(std::string val, uint32_t &out);
-bool parseDouble(std::string val, double &out);
-
+/*
 typedef struct CLIOptions_s {
     uint32_t iterations;
     uint32_t pixel_width;
@@ -62,6 +60,7 @@ typedef struct CLIOptions_s {
     complex<double> bottom_right;
     string output_filename;
 } CLIOptions;
+*/
 
 // bool parseOptions(int argc, char **argv, CLIOptions &options);
 #endif
