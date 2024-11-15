@@ -1,4 +1,4 @@
-CXX=g++
+CXX=clang++
 CXXFLAGS=-std=c++11 -Wall -Werror -pedantic -O2
 LDLIBS=-lm
 OBJECTS=main.o OptionParser.o Image.o Julia.o
