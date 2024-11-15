@@ -16,8 +16,13 @@ template <typename T> void checkOption(OptionParser p, string longName, T &out) 
 }
 
 
+static bool isClose(double a, double b, double epsilon) {
+    return abs(a - b) < epsilon;
+}
+
+
 int main(int argc, char **argv){
-    // default values
+    // default values. Not const because they might be updated by options.
     uint32_t iterations = 2500;
     uint32_t threads = 8;
     size_t height = 900;
@@ -70,6 +75,14 @@ int main(int argc, char **argv){
     cout << "Escape Radius: " << radius << endl;
     if(random_palette) {
         cout << "Random Palette length: " << random_palette << endl;
+    }
+
+    double plane_aspect_ratio = (bottom_right.real() - top_left.real()) / (top_left.imag() - bottom_right.imag());
+    double image_aspect_ratio = (double)width / (double)height;
+    const double eps = 0.01;
+    if(!isClose(plane_aspect_ratio, image_aspect_ratio, eps)){
+        cout << "Warning: plane and image has different aspect ratios." << endl;
+        cout << "Image may look squished as a result" << endl;
     }
 
     Palette palette;

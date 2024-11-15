@@ -49,18 +49,4 @@ class OptionParser {
         std::map<char, uint32_t> uint32tOptions;
 };
 
-/*
-typedef struct CLIOptions_s {
-    uint32_t iterations;
-    uint32_t pixel_width;
-    uint32_t pixel_height;
-    uint32_t thread_count;
-    complex<double> c;
-    complex<double> top_left;
-    complex<double> bottom_right;
-    string output_filename;
-} CLIOptions;
-*/
-
-// bool parseOptions(int argc, char **argv, CLIOptions &options);
 #endif

@@ -21,6 +21,8 @@ Color::Color(uint8_t r, uint8_t g, uint8_t b){
 
 
 void Palette::addRGB(uint8_t r, uint8_t g, uint8_t b){
+    // Correct colors so interpolation looks better.
+    // 2.2 is the standard gamma setting for computer monitors.
     rgb_length++;
     linear_colors.push_back(pow(r/255.0, 2.2));
     linear_colors.push_back(pow(g/255.0, 2.2));
@@ -46,6 +48,7 @@ Color Palette::getColor(double index){
     double r = mix(linear_colors[3*index_a], linear_colors[3*index_b], fraction);
     double g = mix(linear_colors[3*index_a+1], linear_colors[3*index_b+1], fraction);
     double b = mix(linear_colors[3*index_a+2], linear_colors[3*index_b+2], fraction);
+    // Colors need to be gamma adjusted back before converted to standard RGB.
     return Color(255*pow(r, 1/2.2), 255*pow(g, 1/2.2), 255*pow(b, 1/2.2));
 }
 
