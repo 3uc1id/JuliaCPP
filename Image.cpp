@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 
@@ -47,6 +48,8 @@ static double mix(double a, double b, double f) {
 Color Palette::getColor(double index){
     uint64_t index_a = ((uint64_t) index) % length;
     uint64_t index_b = (index_a + 1) % length;
+    assert((0 <= index_a && index_a <= length));
+
     double fraction = index - index_a;
     double r = mix(linear_colors[3*index_a], linear_colors[3*index_b], fraction);
     double g = mix(linear_colors[3*index_a+1], linear_colors[3*index_b+1], fraction);

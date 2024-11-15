@@ -1,6 +1,6 @@
 #include "Image.h"
 #include "Julia.h"
-#include "Option.h"
+#include "OptionParser.h"
 #include <iostream>
 #include <vector>
 #include <thread>
@@ -8,21 +8,37 @@
 
 using namespace std;
 
-int main(int argc, char **argv){
-    CLIOptions options = {
-        // Set the default option values here.
-        .iterations=1000,
-        .pixel_width=1600,
-        .pixel_height=900,
-        .thread_count=8,
-        .c={0.35,0.35},
-        .top_left={-1.6,0.9},
-        .bottom_right={1.6,-0.9},
-        .output_filename="JuliaCPP.ppm"
-    };
 
-    if(!parseOptions(argc, argv, options)){
-        return 1;
+int main(int argc, char **argv){
+    // default values
+    uint32_t iterations = 1000;
+    uint32_t threads = 8;
+    size_t heigh = 900;
+    size_t width = 1600;
+    complex<double> c(0.35, 0.35);
+    complex<double> top_left(-1.6,0.9);
+    complex<double> bottom_right(1.6,-0.9);
+    string filename = "Julia.ppm";
+
+    OptionParser parser("JuliaCPP");
+    parser.addDescription("Generates images of the Julia set and saves them in PPM format.");
+    parser.addOption('I', "iterations", "Set the number of iterations per pixel. This should be a positive integer.");
+    parser.addOption('W', "width", "Set the pixel width of the image.");
+    parser.addOption('H', "height", "Set the pixel height of the image.");
+    parser.addOption('C', "cparam", "Set the complex parameter used in the Julia iteration.");
+    parser.addOption('T', "topleft", "Set the top left coordinate of the area in the complex plane.");
+    parser.addOption('B', "bottomright", "Set the bottom right coordinate of the area in the complex plane.");
+    parser.addOption('N', "threads", "Set the number of threads used for image rendering.");
+    parser.addOption('O', "filename", "Set the name of the image file. The extension must be .ppm .");
+    
+    if(!parser.parseOptions(argc, argv)){
+        return 0;
+    }
+
+    string optionVal;
+    optionVal = parser.getOptionValue('I');
+    if(optionVal.length()){
+        
     }
 
     cout << "Generating image with the following parameters:" << endl;
@@ -49,7 +65,7 @@ int main(int argc, char **argv){
     Image img(options.pixel_width, options.pixel_height);
     JuliaParams params = {
         .c=options.c,
-        .escape_radius=100.0,
+        .escape_radius=1000.0,
         .iterations=options.iterations,
         .img=img,
         .p=palette,
