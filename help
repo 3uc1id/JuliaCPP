@@ -17,4 +17,3 @@ Note: complex parameters must be given as real,imag . For example, 1.0+1.0i shou
 
 Example:
 ./Draw.awk "-I 2500 -B 2.0,-1.125 -C 0.35,0.35 -O Julia.ppm -H 900 -W 1600 -R 100.0 -r 0 -N 8 -T -2.0,1.125"
-

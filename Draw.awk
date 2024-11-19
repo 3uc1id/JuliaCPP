@@ -3,7 +3,7 @@
 function parse_inputs(l, n){
     if(!(l[n])){
         return
-    } else if((l[n] == "-H") || (l[n] == "--help")){
+    } else if((l[n] == "--help")){
         success = 0
         system("cat help")
         return

@@ -12,4 +12,4 @@ make
 
 ## Accessing help info
 
-`./Draw.awk "-H"`
+`./Draw.awk "--help"`
