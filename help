@@ -1,0 +1,20 @@
+./Draw.awk "[-B BOTTOMRIGHT] [-C CPARAM] [-O FILENAME] [-H HEIGHT] [-I ITERATIONS] [-R RADIUS] [-r RANDOMPALETTE] [-N THREADS] [-T TOPLEFT] [-W WIDTH]"
+Generates images of the Julia set and saves them in PPM format.
+
+Option Details:
+  -B --bottomright          Set the bottom right coordinate of the area in the complex plane.
+  -C --cparam               Set the complex parameter used in the Julia iteration.
+  -O --filename             Set the name of the image file. The extension must be .ppm .
+  -H --height               Set the pixel height of the image.
+  -I --iterations           Set the number of iterations per pixel. This should be a positive integer.
+  -R --radius               Set the escape radius of a point.
+  -r --randompalette        Set the length of a random color palette to use with the image.
+  -N --threads              Set the number of threads used for image rendering.
+  -T --topleft              Set the top left coordinate of the area in the complex plane.
+  -W --width                Set the pixel width of the image.
+
+Note: complex parameters must be given as real,imag . For example, 1.0+1.0i should be entered as 1.0,1.0
+
+Example:
+./Draw.awk "-I 2500 -B 2.0,-1.125 -C 0.35,0.35 -O Julia.ppm -H 900 -W 1600 -R 100.0 -r 0 -N 8 -T -2.0,1.125"
+

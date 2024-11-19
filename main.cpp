@@ -1,20 +1,14 @@
 #include "Image.h"
 #include "Julia.h"
-#include "OptionParser.h"
 #include <iostream>
 #include <vector>
 #include <thread>
 #include <random>
 
+// current example
+//  ./JuliaCPP 2500 8 900 1600 100.0 0.35 0.35 -2.0 1.125 2.0 -1.125 Julia.ppm
 
 using namespace std;
-
-template <typename T> void checkOption(OptionParser p, string longName, T &out) {
-    if(!p.getOptionValue(longName, out)){
-        cout << "Using default value for option --" << longName << endl;
-    }
-}
-
 
 static bool isClose(double a, double b, double epsilon) {
     return abs(a - b) < epsilon;
@@ -23,62 +17,55 @@ static bool isClose(double a, double b, double epsilon) {
 
 int main(int argc, char **argv){
     // default values. Not const because they might be updated by options.
-    uint32_t iterations = 2500;
-    uint32_t threads = 8;
-    size_t height = 900;
-    size_t width = 1600;
-    complex<double> c(0.35, 0.35);
-    complex<double> top_left(-2.0,1.125);
-    complex<double> bottom_right(2.0,-1.125);
-    string filename = "Julia.ppm";
-    double radius = 100.0;
-    size_t random_palette = 0;
+  //uint32_t iterations = 2500;
+  //uint32_t threads = 8;
+  //size_t height = 900;
+  //size_t width = 1600;
+  //    complex<double> c(0.35, 0.35);
+  //complex<double> top_left(-2.0,1.125);
+  //complex<double> bottom_right(2.0,-1.125);
+  //string filename = "Julia.ppm";
+    //double radius = 100.0;
+  //size_t random_palette = 0;
 
-    OptionParser parser("JuliaCPP");
-    parser.addDescription("Generates images of the Julia set and saves them in PPM format.");
-    parser.addOption('I', "iterations", "Set the number of iterations per pixel. This should be a positive integer.", UINT32_T_TYPE);
-    parser.addOption('W', "width", "Set the pixel width of the image.", SIZE_T_TYPE);
-    parser.addOption('H', "height", "Set the pixel height of the image.", SIZE_T_TYPE);
-    parser.addOption('C', "cparam", "Set the complex parameter used in the Julia iteration.", COMPLEX_DOUBLE_TYPE);
-    parser.addOption('T', "topleft", "Set the top left coordinate of the area in the complex plane.", COMPLEX_DOUBLE_TYPE);
-    parser.addOption('B', "bottomright", "Set the bottom right coordinate of the area in the complex plane.", COMPLEX_DOUBLE_TYPE);
-    parser.addOption('N', "threads", "Set the number of threads used for image rendering.", UINT32_T_TYPE);
-    parser.addOption('O', "filename", "Set the name of the image file. The extension must be .ppm .", STRING_TYPE);
-    parser.addOption('R', "radius", "Set the escape radius of a point.", DOUBLE_TYPE);
-    parser.addOption('r', "randompalette", "Set the length of a random color palette to use with the image.", SIZE_T_TYPE);
-    parser.addEpilog("Note: complex parameters must be given as real,imag . For example, 1.0+1.0i should be entered as 1.0,1.0");
-    
-    if(!parser.parseOptions(argc, argv)){
-        return 0;
-    }
+    uint32_t iterations2 = atoi(argv[1]);
+    uint32_t threads2 = atoi(argv[2]);
+    size_t height2 = atoi(argv[3]);
+    size_t width2 = atoi(argv[4]);
+    double radius2 = atof(argv[5]);
 
-    checkOption(parser, "iterations", iterations);
-    checkOption(parser, "threads", threads);
-    checkOption(parser, "height", height);
-    checkOption(parser, "width", width);
-    checkOption(parser, "cparam", c);
-    checkOption(parser, "topleft", top_left);
-    checkOption(parser, "bottomright", bottom_right);
-    checkOption(parser, "filename", filename);
-    checkOption(parser, "radius", radius);
-    checkOption(parser, "randompalette", random_palette);
+    double c1 = atof(argv[6]);
+    double c2 = atof(argv[7]);
+    complex<double> c3(c1, c2);
+
+    double top_left1 = atof(argv[8]);
+    double top_left2 = atof(argv[9]);
+    complex<double> top_left3(top_left1, top_left2);
+
+    double bottom_right1 = atof(argv[10]);
+    double bottom_right2 = atof(argv[11]);
+    complex<double> bottom_right3(bottom_right1, bottom_right2);
+
+    string filename2 = argv[12];
+
+    size_t random_palette = atoi(argv[13]);
 
     cout << "Generating image with the following parameters:" << endl;
-    cout << "Iterations: " << iterations << endl;
-    cout << "Pixel Width: " << width << endl;
-    cout << "Pixel Height: " << height << endl;
-    cout << "Threads: " << threads << endl;
-    cout << "Complex parameter: " << c << endl;
-    cout << "Top left coordinate: " << top_left << endl;
-    cout << "Bottom right coordinate: " << bottom_right << endl;
-    cout << "Image Filename: " << filename << endl;
-    cout << "Escape Radius: " << radius << endl;
+    cout << "Iterations: " << iterations2 << endl;
+    cout << "Pixel Width: " << width2 << endl;
+    cout << "Pixel Height: " << height2 << endl;
+    cout << "Threads: " << threads2 << endl;
+    cout << "Complex parameter: " << c3 << endl;
+    cout << "Top left coordinate: " << top_left3 << endl;
+    cout << "Bottom right coordinate: " << bottom_right3 << endl;
+    cout << "Image Filename: " << filename2 << endl;
+    cout << "Escape Radius: " << radius2 << endl;
     if(random_palette) {
         cout << "Random Palette length: " << random_palette << endl;
     }
 
-    double plane_aspect_ratio = (bottom_right.real() - top_left.real()) / (top_left.imag() - bottom_right.imag());
-    double image_aspect_ratio = (double)width / (double)height;
+    double plane_aspect_ratio = (bottom_right3.real() - top_left3.real()) / (top_left3.imag() - bottom_right3.imag());
+    double image_aspect_ratio = (double)width2 / (double)height2;
     const double eps = 0.01;
     if(!isClose(plane_aspect_ratio, image_aspect_ratio, eps)){
         cout << "Warning: plane and image has different aspect ratios." << endl;
@@ -114,22 +101,20 @@ int main(int argc, char **argv){
         palette.addRGB(0xDE, 0x4D, 0x86);
     }
 
-
-
-    Image img(width, height);
+    Image img(width2, height2);
     JuliaParams params = {
-        .c=c,
-        .escape_radius=radius,
-        .iterations=iterations,
+        .c=c3,
+        .escape_radius=radius2,
+        .iterations=iterations2,
         .img=img,
         .p=palette,
-        .top_left=top_left,
-        .bottom_right=bottom_right,
+        .top_left=top_left3,
+        .bottom_right=bottom_right3,
     };
     vector<thread> workers;
 
-    for(int i=0; i < threads; i++){
-        workers.emplace_back(julia_worker, &params, threads, i);
+    for(int i=0; i < threads2; i++){
+        workers.emplace_back(julia_worker, &params, threads2, i);
     }
 
     // wait for all workers to finish
@@ -137,6 +122,6 @@ int main(int argc, char **argv){
         t.join();
     }
 
-    img.saveImage(filename);
+    img.saveImage(filename2);
     return 0;
 }
