@@ -5,8 +5,11 @@
 
 ## installing in ubuntu
 
+```
 sudo apt install clang libstdc++-11-dev
 make
+```
 
 ## Accessing help info
-./Draw.awk "-H"
+
+`./Draw.awk "-H"`
