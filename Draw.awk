@@ -63,7 +63,7 @@ BEGIN {
       split(ARGV[1], input, " ")
       parse_inputs(input, 1)
 
-      #check values are in reasonable ranges
+      #warnings for if values are outside of reasonable ranges.
       if(iterations < 5){
           print("WARNING: iterations is too low")
       }
